@@ -1,3 +1,7 @@
-.idea
 __pycache__
+words_list.txt
+eng_words_list.txt
+.idea
 venv
+
+.env
