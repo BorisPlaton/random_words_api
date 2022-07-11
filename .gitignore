@@ -3,5 +3,6 @@ words_list.txt
 eng_words_list.txt
 .idea
 venv
+logs
 
 .env

@@ -5,10 +5,11 @@ from dotenv import load_dotenv
 from flask_restful import Api
 
 
-api = Api()
+api = Api(catch_all_404s=True)
 
 
-def create_app():
+def create_app() -> Flask:
+    """Создаёт экземпляр приложения и возвращает его."""
     load_dotenv()
     app = Flask(__name__)
     app.debug = os.getenv('DEBUG') == '1'
