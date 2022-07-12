@@ -5,32 +5,32 @@ class LoggerMixin:
     """Миксин для работы с логированием."""
 
     logger_name: str = __name__
-
-    is_stream_handler = False
-    stream_log_level: int = logging.WARNING
-    stream_log_format: str = "%(asctime)s:%(name)s:%(message)s"
+    logger_level: int = logging.WARNING
 
     is_file_handler = True
-    file_log_level: int = logging.WARNING
-    file_log_format: str = "%(asctime)s:%(name)s:%(message)s"
+    file_log_format: str = "[%(asctime)s in %(name)s.%(funcName)s] - %(message)s"
     log_file = None
 
-    def __init__(self):
-        self.logger = self.get_logger()
+    is_stream_handler = False
+    stream_log_format: str = "[%(asctime)s in %(name)s.%(funcName)s] - %(message)s"
 
-    def get_logger(self) -> logging.Logger:
+    def __init__(self):
+        self.logger = self.set_logger()
+
+    def set_logger(self) -> logging.Logger:
         """
         Возвращает экземпляр `logging.Logger`. Добавляет логирование в
         файл, если `is_file_handler` = True. Аналогично с выводом в консоль,
         если атрибут `is_stream_handler` = True.
         """
         logger = logging.getLogger(self.logger_name)
+        logger.setLevel(self.logger_level)
 
         if self.is_file_handler:
             logger.addHandler(self.get_file_handler())
 
         if self.is_stream_handler:
-            logger.addHandler(self.get_file_handler())
+            logger.addHandler(self.get_stream_handler())
 
         return logger
 
@@ -46,22 +46,20 @@ class LoggerMixin:
         return self.setup_handler(
             file_handler,
             self.file_log_format,
-            self.file_log_level,
         )
 
     def get_stream_handler(self) -> logging.StreamHandler:
         """Возвращает обработчик вывода в консоль `logging.StreamHandler`."""
-        stream_handler = logging.StreamHandler(self.log_file)
+        stream_handler = logging.StreamHandler()
         return self.setup_handler(
             stream_handler,
             self.stream_log_format,
-            self.stream_log_level,
         )
 
-    def setup_handler(self, handler, handler_log_format: str, log_level: int):
+    def setup_handler(self, handler, handler_log_format: str):
         """Устанавливает стандартные настройки для обработчика."""
         handler.setFormatter(
             self.get_formatter(handler_log_format)
         )
-        handler.setLevel(log_level)
+        handler.setLevel(self.logger_level)
         return handler

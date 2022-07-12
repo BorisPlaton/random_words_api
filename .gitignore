@@ -1,8 +1,8 @@
-__pycache__
-words_list.txt
 eng_words_list.txt
+words_list.txt
+__pycache__
 .idea
-venv
-logs
-
 .env
+venv
+logs/*
+!logs/.gitkeep

@@ -4,7 +4,7 @@ import os
 from flask import request
 
 from config.settings import BASE_DIR
-from utils.views import BaseView
+from utils.base_views import BaseView
 from utils.words import words_file
 
 
@@ -12,7 +12,7 @@ class GetWords(BaseView):
     """View-class для получения списка слов."""
 
     log_file = BASE_DIR / 'logs' / 'words_logs.log'
-    file_log_level = logging.INFO
+    logger_level = logging.INFO
 
     def get(self):
         """Возвращает клиенту список слов."""
@@ -27,7 +27,8 @@ class GetWords(BaseView):
             'words': words_list,
         }
 
-    def get_words_amount_parameter(self) -> int:
+    @staticmethod
+    def get_words_amount_parameter() -> int:
         """
         Получает количество слов из параметра `amount` url-адреса.
 
@@ -42,8 +43,6 @@ class GetWords(BaseView):
             int(os.getenv('DEFAULT_WORDS_QUANTITY')),
             type=int
         )
-        print(self.logger)
         if words_amount < 0:
-            self.logger.info('Wrong words quantity %s' % words_amount)
             raise ValueError("Words quantity can't be a negative number %s" % words_amount)
         return words_amount

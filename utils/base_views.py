@@ -9,10 +9,8 @@ class BaseView(Resource, LoggerMixin):
     """Базовый View-класс."""
 
     log_file = BASE_DIR / 'logs' / 'base_logs.log'
-    file_log_format = "%(asctime)s:%(name)s.%(funcName)s:%(message)s"
 
     def dispatch_request(self, *args, **kwargs):
-        print(self.logger)
         try:
             response = super().dispatch_request(*args, **kwargs)
         except Exception as e:
