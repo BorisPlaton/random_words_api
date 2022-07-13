@@ -1,8 +1,8 @@
 from flask import jsonify
 from flask_restful import Resource
 
-from config.settings_file import settings
-from utils.mixins import LoggerMixin
+from random_words.config.settings_file import settings
+from random_words.utils.mixins import LoggerMixin
 
 
 class BaseView(Resource, LoggerMixin):

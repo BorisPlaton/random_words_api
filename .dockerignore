@@ -1,0 +1,9 @@
+dotenv_example.txt
+docker-compose.yml
+logs/*
+__pycache__
+Dockerfile
+.gitignore
+.idea
+venv
+.git

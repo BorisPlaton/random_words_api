@@ -1,6 +1,6 @@
 import random
 
-from config.settings import BASE_DIR
+from random_words.config.settings import BASE_DIR
 
 
 class WordFile:

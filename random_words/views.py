@@ -2,10 +2,10 @@ import logging
 
 from flask import request
 
-from config.settings import BASE_DIR
-from config.settings_file import settings
-from utils.base_views import BaseView
-from utils.words import words_file
+from random_words.config.settings import BASE_DIR
+from random_words.config.settings_file import settings
+from random_words.utils.base_views import BaseView
+from random_words.utils.words import words_file
 
 
 class GetWords(BaseView):
@@ -52,8 +52,8 @@ class GetWords(BaseView):
         Получает язык слов из параметра `lang` url-адреса.
 
         Значение параметра `lang` должно находиться в ключах
-        `settings['WORDS']['FILES']`, иначе будет вызвана ошибка, что такой
-        язык недоступен.
+        `['WORDS']['FILES']` json-файла конфига, иначе будет вызвана ошибка,
+        что такой язык недоступен.
         """
         words_language = request.args.get(
             'lang',

@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  words:
+    build: .
+    image: random_words_image:test
+    container_name: random_words_container
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "5050:5000"
+    volumes:
+      - ./random_words/logs:/random_words/random_words/logs
+    command: flask run -h 0.0.0.0 -p 5000
