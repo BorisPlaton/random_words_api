@@ -1,8 +1,9 @@
 eng_words_list.txt
-words_list.txt
+ru_words_list.txt
+dev_config.json
+!logs/.gitkeep
 __pycache__
+logs/*
 .idea
 .env
 venv
-logs/*
-!logs/.gitkeep

@@ -1,20 +1,22 @@
 import os
 
 from flask import Flask
-from dotenv import load_dotenv
 from flask_restful import Api
 
+from config.settings_file import settings
+from utils.words import words_file
 
-api = Api(catch_all_404s=True)
 
-
-def create_app() -> Flask:
+def create_app(json_config) -> Flask:
     """Создаёт экземпляр приложения и возвращает его."""
-    load_dotenv()
+    settings.load_config_file(json_config)
+    words_file.set_words_files(settings['WORDS']['FILES'])
+
     app = Flask(__name__)
     app.debug = os.getenv('DEBUG') == '1'
 
     from views import GetWords
+    api = Api(catch_all_404s=True)
     api.add_resource(GetWords, '/')
 
     api.init_app(app)

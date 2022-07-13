@@ -2,5 +2,8 @@ from utils.shortcuts import create_app
 
 
 if __name__ == '__main__':
-    app = create_app()
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    app = create_app('config.json')
     app.run()

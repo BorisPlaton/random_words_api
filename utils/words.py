@@ -1,21 +1,17 @@
-import os
 import random
 
 from config.settings import BASE_DIR
 
 
-class WordsHandler:
-    """Класс, который отвечает за работу со словами из файла."""
-
-    def __init__(self, path_to_file):
-        self.path_to_file = path_to_file
+class WordFile:
+    """Файл со словами."""
 
     def get_words_from_file(self, amount) -> list[str]:
         """
-        Возвращает список слов длинной `amount` из файла,
-        путь к которому указан в атрибуте `path_to_file`.
+        Возвращает список слов, на языке `language`, длинной `amount`
+        из файла, путь к которому указан в атрибуте `path_to_file`.
         """
-        with open(self.path_to_file, encoding='utf-8') as input_file:
+        with open(self.path_to_file) as input_file:
             all_words_list = input_file.read().split()
 
         return self.get_random_elements(amount, all_words_list)
@@ -37,14 +33,37 @@ class WordsHandler:
         if amount >= len(items_list):
             return items_list
 
-        elements_amount = 0
-        elements_list = []
+        return [random.choice(items_list) for _ in range(amount)]
 
-        while elements_amount < amount:
-            elements_list.append(random.choice(items_list))
-            elements_amount += 1
-
-        return elements_list
+    def __init__(self, path_to_file):
+        """Устанавливает путь к файлу со словами."""
+        self.path_to_file = path_to_file
 
 
-words_file = WordsHandler(BASE_DIR / os.getenv('FILE_LOCATION'))
+class WordsHandler:
+    """Класс, который отвечает за работу с файлами слов."""
+
+    def set_words_files(self, words_files: dict):
+        """
+        Устанавливает файлы и их языки в атрибут экземпляра
+        класса `self.words_files`.
+        """
+        for language, path_to_file in words_files.items():
+            self.words_files[language] = WordFile(BASE_DIR / path_to_file)
+
+    def __init__(self, words_files: dict = None):
+        """
+        Устанавливает файлы и их языки в атрибут экземпляра
+        класса `self.words_files`, если `words_files` не `None`.
+        """
+        self.words_files: dict[str, WordFile] = {} if not words_files else self.set_words_files(words_files)
+
+    def __getitem__(self, item: str) -> WordFile:
+        """
+        Возвращает файл со словами в зависимости от языка,
+        который передаётся в аргумент `item`.
+        """
+        return self.words_files[item]
+
+
+words_file = WordsHandler()

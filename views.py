@@ -1,9 +1,9 @@
 import logging
-import os
 
 from flask import request
 
 from config.settings import BASE_DIR
+from config.settings_file import settings
 from utils.base_views import BaseView
 from utils.words import words_file
 
@@ -15,11 +15,10 @@ class GetWords(BaseView):
     logger_level = logging.INFO
 
     def get(self):
-        """Возвращает клиенту список слов."""
+        """Возвращает клиенту список слов на выбранном языком."""
         try:
-            words_list = words_file.get_words_from_file(
-                self.get_words_amount_parameter()
-            )
+            words_list = (words_file[self.get_words_language_query_parameter()]
+                          .get_words_from_file(self.get_words_amount_query_parameter()))
         except ValueError as e:
             self.logger.info('%s - %s' % (request.remote_addr, str(e)))
             return {'error': str(e)}, 400
@@ -28,7 +27,7 @@ class GetWords(BaseView):
         }
 
     @staticmethod
-    def get_words_amount_parameter() -> int:
+    def get_words_amount_query_parameter() -> int:
         """
         Получает количество слов из параметра `amount` url-адреса.
 
@@ -40,9 +39,29 @@ class GetWords(BaseView):
         """
         words_amount = request.args.get(
             'quantity',
-            int(os.getenv('DEFAULT_WORDS_QUANTITY')),
-            type=int
+            int(settings['WORDS']['DEFAULT_QUANTITY']),
+            type=int,
         )
         if words_amount < 0:
-            raise ValueError("Words quantity can't be a negative number %s" % words_amount)
+            raise ValueError("Words quantity can't be a negative number `%s`" % words_amount)
         return words_amount
+
+    @staticmethod
+    def get_words_language_query_parameter() -> str:
+        """
+        Получает язык слов из параметра `lang` url-адреса.
+
+        Значение параметра `lang` должно находиться в ключах
+        `settings['WORDS']['FILES']`, иначе будет вызвана ошибка, что такой
+        язык недоступен.
+        """
+        words_language = request.args.get(
+            'lang',
+            settings['WORDS']['DEFAULT_LANGUAGE'],
+        )
+        if words_language not in settings['WORDS']['FILES']:
+            raise ValueError(
+                "Incorrect language - `%s`. Only %s are available." %
+                (words_language, f"`{'`, `'.join(settings['WORDS']['FILES'].keys())}`")
+            )
+        return words_language
