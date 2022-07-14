@@ -1,0 +1,10 @@
+{
+  "WORDS": {
+    "DEFAULT_QUANTITY": 50,
+    "DEFAULT_LANGUAGE": "ru"
+  },
+  "FILES": {
+    "ru": "ru_words_list.txt",
+    "eng": "eng_words_list.txt"
+  }
+}

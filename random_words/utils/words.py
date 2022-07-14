@@ -1,6 +1,6 @@
 import random
 
-from random_words.config.settings import BASE_DIR
+from configuration import settings
 
 
 class WordFile:
@@ -49,7 +49,7 @@ class WordsHandler:
         класса `self.words_files`.
         """
         for language, path_to_file in words_files.items():
-            self.words_files[language] = WordFile(BASE_DIR / path_to_file)
+            self.words_files[language] = WordFile(settings.BASE_DIR / path_to_file)
 
     def __init__(self, words_files: dict = None):
         """

@@ -2,8 +2,7 @@ import logging
 
 from flask import request
 
-from random_words.config.settings import BASE_DIR
-from random_words.config.settings_file import settings
+from configuration import settings
 from random_words.utils.base_views import BaseView
 from random_words.utils.words import words_file
 
@@ -11,7 +10,7 @@ from random_words.utils.words import words_file
 class GetWords(BaseView):
     """View-class для получения списка слов."""
 
-    log_file = BASE_DIR / 'logs' / 'words_logs.log'
+    log_file = settings.BASE_DIR / 'logs' / 'words_logs.log'
     logger_level = logging.INFO
 
     def get(self):
@@ -29,17 +28,17 @@ class GetWords(BaseView):
     @staticmethod
     def get_words_amount_query_parameter() -> int:
         """
-        Получает количество слов из параметра `amount` url-адреса.
+        Получает количество слов из url-параметра `quantity`.
 
-        Значение параметра `amount` должно быть числом и больше нуля.
-        Если это не число, то вернет значение из переменной окружения
-        `DEFAULT_WORDS_QUANTITY`. Если число меньше 0, то вернет ответ
-        пользователю со статусом 400 и сообщением, что количество слов
-        не может быть отрицательным числом.
+        Значение параметра `quantity` должно быть числом и больше нуля.
+        Если это не число, то вернет значение из настроек
+        `settings['WORDS']['DEFAULT_QUANTITY']`. Если число меньше 0, то
+        вернет ответ пользователю со статусом 400 и сообщением, что
+        количество слов не может быть отрицательным числом.
         """
         words_amount = request.args.get(
             'quantity',
-            int(settings['WORDS']['DEFAULT_QUANTITY']),
+            int(settings.json['WORDS']['DEFAULT_QUANTITY']),
             type=int,
         )
         if words_amount < 0:
@@ -49,19 +48,21 @@ class GetWords(BaseView):
     @staticmethod
     def get_words_language_query_parameter() -> str:
         """
-        Получает язык слов из параметра `lang` url-адреса.
+        Получает язык слов из url-параметра `lang`.
 
         Значение параметра `lang` должно находиться в ключах
-        `['WORDS']['FILES']` json-файла конфига, иначе будет вызвана ошибка,
-        что такой язык недоступен.
+        `settings['FILES']` json-файла конфига, иначе
+        будет вызвана ошибка, что такой язык недоступен. Если
+        параметр не будет указан, то будет использоваться значение,
+        которое указано в `settings['WORDS']['DEFAULT_LANGUAGE']`.
         """
         words_language = request.args.get(
             'lang',
-            settings['WORDS']['DEFAULT_LANGUAGE'],
+            settings.json['WORDS']['DEFAULT_LANGUAGE'],
         )
-        if words_language not in settings['WORDS']['FILES']:
+        if words_language not in settings.json['FILES']:
             raise ValueError(
                 "Incorrect language - `%s`. Only %s are available." %
-                (words_language, f"`{'`, `'.join(settings['WORDS']['FILES'].keys())}`")
+                (words_language, f"`{'`, `'.join(settings.json['FILES'].keys())}`")
             )
         return words_language

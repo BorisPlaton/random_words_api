@@ -1,9 +1,7 @@
-random_words/eng_words_list.txt
-random_words/ru_words_list.txt
-random_words/logs/*
-!random_words/logs/.gitkeep
-dev_config.json
+logs/*
+!logs/.gitkeep
+docker_logs/*
+!docker_logs/.gitkeep
 __pycache__
 .idea
-.env
 venv

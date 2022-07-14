@@ -1,7 +1,7 @@
 from flask import jsonify
 from flask_restful import Resource
 
-from random_words.config.settings_file import settings
+from configuration import settings
 from random_words.utils.mixins import LoggerMixin
 
 
@@ -11,6 +11,10 @@ class BaseView(Resource, LoggerMixin):
     log_file = settings.BASE_DIR / 'logs' / 'base_logs.log'
 
     def dispatch_request(self, *args, **kwargs):
+        """
+        Если происходит ошибка, то логируем её и отправляем
+        приемлемый ответ пользователю.
+        """
         try:
             response = super().dispatch_request(*args, **kwargs)
         except Exception as e:

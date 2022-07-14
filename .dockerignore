@@ -1,4 +1,3 @@
-dotenv_example.txt
 docker-compose.yml
 logs/*
 __pycache__
@@ -7,3 +6,4 @@ Dockerfile
 .idea
 venv
 .git
+docker_logs

@@ -7,8 +7,9 @@ services:
     container_name: random_words_container
     environment:
       - PYTHONUNBUFFERED=1
+      - FLASK_ENV=production
     ports:
       - "5050:5000"
     volumes:
-      - ./random_words/logs:/random_words/random_words/logs
+      - ./docker_logs/:/random_words/logs/
     command: flask run -h 0.0.0.0 -p 5000

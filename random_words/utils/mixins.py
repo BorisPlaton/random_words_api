@@ -14,10 +14,7 @@ class LoggerMixin:
     is_stream_handler = False
     stream_log_format: str = "[%(asctime)s in %(name)s.%(funcName)s] - %(message)s"
 
-    def __init__(self):
-        self.logger = self.set_logger()
-
-    def set_logger(self) -> logging.Logger:
+    def set_logger(self):
         """
         Возвращает экземпляр `logging.Logger`. Добавляет логирование в
         файл, если `is_file_handler` = True. Аналогично с выводом в консоль,
@@ -32,7 +29,14 @@ class LoggerMixin:
         if self.is_stream_handler:
             logger.addHandler(self.get_stream_handler())
 
-        return logger
+    @property
+    def logger(self):
+        logger_instance = logging.getLogger(self.logger_name)
+
+        if not logger_instance.hasHandlers():
+            self.set_logger()
+
+        return logger_instance
 
     @staticmethod
     def get_formatter(log_format: str) -> logging.Formatter:
