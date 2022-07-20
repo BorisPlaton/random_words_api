@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from flask import Flask
+from flask_cors import CORS
 from flask_restful import Api
 
 from random_words.utils.words import words_file
@@ -20,6 +21,7 @@ def create_app(config_file, config_pyfile) -> Flask:
     words_file.set_words_files(settings.json['FILES'])
 
     app = Flask(__name__)
+    CORS(app)
     app.debug = os.getenv('DEBUG') == '1'
 
     from random_words.views import GetWords

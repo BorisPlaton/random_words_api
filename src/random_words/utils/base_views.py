@@ -8,7 +8,7 @@ from random_words.utils.mixins import LoggerMixin
 class BaseView(Resource, LoggerMixin):
     """Базовый View-класс."""
 
-    log_file = settings.BASE_DIR / 'logs' / 'base_logs.log'
+    log_file = settings.BASE_DIR.parent / 'logs' / 'base_logs.log'
 
     def dispatch_request(self, *args, **kwargs):
         """

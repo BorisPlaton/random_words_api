@@ -10,7 +10,7 @@ from random_words.utils.words import words_file
 class GetWords(BaseView):
     """View-class для получения списка слов."""
 
-    log_file = settings.BASE_DIR / 'logs' / 'words_logs.log'
+    log_file = settings.BASE_DIR.parent / 'logs' / 'words_logs.log'
     logger_level = logging.INFO
 
     def get(self):

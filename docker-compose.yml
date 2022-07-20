@@ -3,11 +3,8 @@ version: "3.8"
 services:
   words:
     build: .
-    image: random_words_image:test
+    image: random_words_image
     container_name: random_words_container
-    environment:
-      - PYTHONUNBUFFERED=1
-      - FLASK_ENV=production
     ports:
       - "5050:5000"
     volumes:

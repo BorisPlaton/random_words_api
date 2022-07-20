@@ -1,5 +1,5 @@
 docker-compose.yml
-logs/*
+logs
 __pycache__
 Dockerfile
 .gitignore
@@ -7,3 +7,4 @@ Dockerfile
 venv
 .git
 docker_logs
+README.md
